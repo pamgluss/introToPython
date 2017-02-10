@@ -2,7 +2,7 @@
 ones = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"]
 teens = {11: "Eleven", 12: "Twelve", 13: "Thirteen", 14: "Fourteen", 15: "Fifteen", 16: "Sixteen", 17: "Seventeen", 18: "Eighteen", 19: "Nineteen"}
 tens = ["", "Ten", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"]
-zgroup = ["Hundred", "Thousand", "Million"]
+zgroup = ["", "Hundred", "Thousand", "Million"]
 
 # This first function takes in numbers that are less than 100
 # This will be handy for figuring out specific tens and tees in the tens and ones places
@@ -14,6 +14,8 @@ def subhundred(number):
     elif number > 10 and number < 20:
         return teens[number]
     # The tens are easy since 1 -> 10 when indexing and so forth.
+    elif number is 10:
+        return tens[1]
     elif number >= 20 and number < 100:
         # Here I had to make the integer a string so that I could index it.
         numberasstring = str(number)
@@ -31,13 +33,14 @@ def subthousand(number, znum):
     # I realized it's possible to have 1 thousand or 10 thousand, so we had to plan for missing indices.
     if number < 100:
         # Since the number can be evaluated by an old function, I just called the subhundred function.
-        answer = subhundred(number) + " " + zgroup[znum]
+        answer = subhundred(number)
     else:
         numberasstring = str(number)
         hundredsplace = int(numberasstring[0])
         tensplace = int(numberasstring[1:])
         # this is broken and does NOT support "one hundred thousand" - oops, gotta get on that
-        answer = ones[hundredsplace] + " " + zgroup[znum] + " " + subhundred(tensplace)
+        answer = ones[hundredsplace]
+        answer += " " + zgroup[znum] + " " + subhundred(tensplace)
 
     return answer
 
@@ -47,17 +50,17 @@ def overthousand(number):
     digits = splitbythousands(number)
     answer = ""
     # For testing purposes.
-    print(digits)
-    #Digits[2] (if it exists) will be 1,000,000 - 999,999,999
+    # print(digits)
+    # Digits[2] (if it exists) will be 1,000,000 - 999,999,999
     if len(digits) > 2:
-        answer += subthousand(digits[2], 2)
+        answer += subthousand(digits[2], 1) + " " + zgroup[3] + " "
 
     #digits[1] will be 1000-999,999
-    if len(digits) > 1:
-        answer += subthousand(digits[1], 1)
+    if len(digits) > 1 and digits[1] > 0:
+        answer += subthousand(digits[1], 1) + " " + zgroup[2] + " "
 
     # digits[0] is going to be 0 - 999
-    answer += subthousand(digits[0], 0)
+    answer += subthousand(digits[0], 1)
     return answer
 
 # This is a helper function for overthousand.
@@ -79,7 +82,7 @@ def spell(number):
         n = number.lstrip('-')
         if n.isnumeric():
             # If the number is too big, we won't try it.
-            if len(n) > 10:
+            if len(n) >= 10:
                 return "Number is too long!"
             # If the number is zero, return zero instead of running any other code.
             elif n is 0:
@@ -88,14 +91,34 @@ def spell(number):
                 #Turn the number into an integer so we can compare it to 100 and 1000.
                 n = int(n)
                 if n < 100:
-                    return subhundred(n)
+                    if number[0] is "-":
+                        return "Negative " + subhundred(n)
+                    else:
+                        return subhundred(n)
                 elif n >= 100 and n < 1000:
-                    return subthousand(n, 0)
+                    if number[0] is "-":
+                        return "Negative " + subthousand(n, 1)
+                    else:
+                        return subthousand(n, 1)
+
                 else:
-                    return overthousand(n)
+                    if number[0] is "-":
+                        return "Negative " + overthousand(n)
+                    else:
+                        return overthousand(n)
+
         else:
             return "Type in a number."
     else:
         return "Type in a number."
 
-print(spell("12234409"))
+print(spell(input("Type in a number: ")))
+print(spell("10"))
+print(spell("-10"))
+print(spell("127"))
+print(spell("1009"))
+print(spell("-80068"))
+print(spell("26080068"))
+print(spell("126080068"))
+print(spell("33566080068"))
+print(spell("Hi Mom!"))
