@@ -1,37 +1,40 @@
-# Intro to Python homework 5
+# Intro to Python homework 6
 # Pamela Gluss
 class Card():
 
     counter = 0
-
-    # I decided to go with random card generation, instead of using an existing deck
-    # Therefore, when the card is generated, it imports randint
+    # init takes in rank and suit, and assigns self.rank and so on to the inputs
     def __init__(self, rank, suit):
         # First, we'll set parameters for error throwing
-        if rank < 0 or rank > 13:
-            raise ValueError()
         if type(rank) is not int:
+            raise TypeError()
+        if rank <= 0 or rank > 13:
+            raise ValueError()
+
+        if type(suit) is not str:
             raise TypeError()
         if suit not in ['c', 'd', 's', 'h']:
             raise ValueError()
-        if type(suit) is not str:
-            raise TypeError()
-        # set the rank using getRank
-        # Okay so if the rank can't be found in the dictionary, throw an error.
-        try:
-            self.rank = self.getRank(rank)
-        except TypeError:
-            print("Wrong type")
-        except ValueError:
-            print("Wrong value")
-        # Generates rank and suit so that they can index the lists/dictionaries in the following methods.
-        self.rank = 1
-        self.suit = 0
-        self.bjValue = 0
+
+        # init will attempt to set the values of rank, suit and bjValue
+        self.rank = self.getRank(rank)
+        self.suit = self.getSuit(suit)
+        self.bjValue = self.getBjValue(rank)
+        # except TypeError:
+        #     self.rank = 1
+        #     self.suit = 0
+        #     self.bjValue = 0
+        #     return "Wrong type"
+        # except ValueError:
+        #     self.rank = 1
+        #     self.suit = 0
+        #     self.bjValue = 0
+        #     return "Wrong value"
+
         Card.counter += 1
 
-    # This method takes the randomly generated integer from self.suit and looks in a list to find the string
-    # name for the suit. It reassigns self.suit AND returns self.suit.
+    # This method takes the input from self.suit and looks in a list to find the string
+    # name for the suit. It  returns self.suit.
     def getSuit(self, suit):
         suitList = {"h":"Hearts", "s":"Spades", "c":"Clubs", "d":"Diamonds"}
         return suitList[suit]
@@ -73,24 +76,7 @@ class Card():
                  13:10, "King": 10}
         return bjSel[rank]
 
-    # readyToPlay simply sets all the values described in the methods above.
-    def readyToPlay(self, rank, suit):
-
-
-        # Next, set the suit using getSuit
-        # If the suit can't be found in the dictionary, throw an error
-        try:
-            self.suit = self.getSuit(suit)
-        except TypeError:
-            print("Wrong type")
-        except ValueError:
-            print("Wrong value")
-
-            # Finally, set the blackjack value using the rank
-            self.bjValue = self.getBjValue(rank)
-
-
-    # Returns Rank of Suit (eg. Ace of Spades
+    # Returns string that says Rank of Suit (eg. Ace of Spades)
     def __str__(self):
         return "%s of %s" % (self.rank, self.suit)
 
@@ -217,7 +203,70 @@ def playBlackJack():
 playBlackJack()
 """
 # rank, then suit
-card1 = Card(3, 'h')
-print(card1.readyToPlay())
+# Main function that contains all the try/except blocks
+def mainProg():
+    # Test 1: Correct Card
+    print("Test 1")
+    try:
+        card1 = Card(3, 'h')
+        print(card1)
+    except TypeError:
+        print("Wrong Type")
+    except ValueError:
+        print("Wrong Value")
+
+    # Test 2: Incorrect rank value
+    print("Test 2")
+    try:
+        card2 = Card(15,'5')
+        print(card2)
+    except TypeError:
+        print("Wrong Type")
+    except ValueError:
+        print("Wrong Value")
+
+    # Test 3: Incorrect rank type
+    print("Test 3")
+    try:
+        card3 = Card('g', '5')
+        print(card3)
+    except TypeError:
+        print("Wrong Type")
+    except ValueError:
+        print("Wrong Value")
+
+    # Test 4: Incorrect suit value
+    print("Test 4")
+    try:
+        card4 = Card(1,'pam')
+        print(card4)
+    except TypeError:
+        print("Wrong Type")
+    except ValueError:
+        print("Wrong Value")
+
+    # Test 5: Incorrect suit type
+    print("Test 5")
+    try:
+        card5 = Card(1, 5)
+        print(card5)
+    except TypeError:
+        print("Wrong Type")
+    except ValueError:
+        print("Wrong Value")
+
+    # Test 6: Incorrect rank value & incorrect suit type
+    print("Test 6")
+    try:
+        card6 = Card(15, 5)
+        print(card6)
+    except TypeError:
+        print("Wrong Type")
+    except ValueError:
+        print("Wrong Value")
+mainProg()
+
+
+
 
 
