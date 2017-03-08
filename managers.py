@@ -1,7 +1,7 @@
 # Homework 8: Different types of employees
 # Pamela Gluss
 # Part 2: Define the Manager
-from employees import Employee
+from employees_hw8 import Employee
 class Manager(Employee):
     def __init__(self, title, bonus, firstname, lastname, ssn, salary):
         Employee.__init__(self, firstname, lastname, ssn, salary)

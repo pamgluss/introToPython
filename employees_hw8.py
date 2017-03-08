@@ -17,15 +17,19 @@ class Employee(object):
         self.salary *= (1 + percentRaise/100)
 
     def __eq__(self, other):
-        if (self.firstName).lower() is (other.firstName).lower() and (self.lastName).lower() is (other.lastName).lower():
+        print("__eq__")
+        if self.firstName.lower() == other.firstName.lower() and self.lastName.lower() == other.lastName.lower():
+            print(self.firstName.lower())
+            print(other.firstName.lower())
             return True
         else:
             return False
     def __lt__(self, other):
-        if self.lastName.lower() < other.lastName.lower():
+        print("__lt__")
+        if self.lastName < other.lastName:
             return True
-        elif self.lastName.lower() is other.lastName.lower():
-            if self.firstName.lower() < other.firstName.lower():
+        elif self.lastName is other.lastName:
+            if self.firstName < other.firstName:
                 return True
             else:
                 return False
