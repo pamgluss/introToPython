@@ -43,7 +43,7 @@ class Toy(Product):
 # Product > Toy > Baby Toy
 class BabyToy(Toy, Product):
     def __init__(self, price, inventory, category, group, name, safetyInfo):
-        Product.__init__(self, price, inventory, category)
+        #Product.__init__(self, price, inventory, category)
         Toy.__init__(self, price, inventory, category, group)
         self.name = name
         self.safetyInfo = safetyInfo
@@ -63,7 +63,7 @@ class Food(Product):
 class frozenDessert(Food, Product):
     def __init__(self, price, inventory, category, size, temperature):
         Food.__init__(self, price, inventory, category)
-        Product.__init__(self, price, inventory, category)
+        #Product.__init__(self, price, inventory, category)
         self.size = size
         self.refrigerationTemperature = temperature
     def __str__(self):
