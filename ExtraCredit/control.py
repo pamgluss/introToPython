@@ -10,14 +10,13 @@ import model
 class Controller:
     def __init__(self):
         root = tk.Tk()
-        self.view = view.MyFrame(self)
         self.model = model.Model()
+        self.view = view.MyFrame(self)
         self.view.mainloop()
-
+    def createShopList(self):
         # Populates self.model.productList with items
         self.model.pamProducts()
-        self.storeInventory = self.model.productList
-        self.view.createShopGrid(self.storeInventory)
+        return self.model.productList
 
 if __name__ == "__main__":
     c = Controller()
