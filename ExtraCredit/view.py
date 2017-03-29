@@ -18,6 +18,7 @@ class MyFrame(tk.Frame):
         self.cartLabel["text"] = "Cart"
         self.cartLabel.grid(row=0, column=4)
         self.cartRow = 1
+        self.cartCatcher = []
 
         # This is a huge mess (but it works, somehow)
         # storeGrid is going to be the n x 4 grid (n being number of items, 4 being
@@ -30,6 +31,7 @@ class MyFrame(tk.Frame):
         # Create the button that will calculate the subtotal
         self.calcButton = tk.Button()
         self.calcButton["text"] = "Calculate Subtotal"
+        self.calcButton["command"] = lambda i = self.cartCatcher: self.controller.calSubTotal(i)
         self.calcButton.grid(row=len(self.itemList),column=5)
 
         # Create the label where the subtotal will appear
@@ -51,28 +53,41 @@ class MyFrame(tk.Frame):
             self.newRow[1].grid(row=i+1, column=1)
 
             #Create the quantity spinner
-            self.newRow.append(tk.Spinbox(format='%4.2f', from_=0, to=list[i].stockQuantity, wrap=True))
+            self.newRow.append(tk.Spinbox(format='%2.0f', from_=0, to=list[i].stockQuantity, wrap=True))
             self.newRow[2].grid(row=i+1, column=2)
 
             #Create "Add to Cart" Button
-            #command = self.addToCart(list[i], self.shopRows[i][2].get())
             self.newRow.append(tk.Button(text="Add to Cart",
-                                         command=lambda j = i: self.addToCart(list[j], 0)))
+                                         command=lambda j = i: self.addToCart(list[j], self.shopRows[j][2].get())))
             self.newRow[3].grid(row=i+1, column=3)
 
             # Append the new row to the grid
             self.shopRows.append(self.newRow)
 
+    # addToCart is called in the lambda for add to cart button.
     def addToCart(self, object, quantity):
-        print("add to cart test")
-        self.cartItemLabel = tk.Label(text=object.name)
-        self.cartItemLabel.grid(row=self.cartRow, column=4)
+        print("add to cart test", object.name, quantity)
+        newCartRow = []
+        if int(quantity) > 0:
+            newCartRow.append(tk.Label())
+            newCartRow[0]['text'] = object.name
+            newCartRow[0].grid(row=self.cartRow, column=4)
 
-        self.cartQuantitylabel = tk.Label(text=quantity)
-        self.cartItemLabel.grid(row=self.cartRow, column=4)
+            newCartRow.append(tk.Label())
+            newCartRow[1]["text"] = quantity
+            newCartRow[1].grid(row=self.cartRow, column=5)
 
-        self.rfcButton = tk.Button(text="Remove From Cart")
-        self.rfcButton.grid(row=self.cartRow, column=4)
+            newCartRow.append(tk.Button(text="Remove From Cart",
+                                        command=lambda i = self.cartRow-1: self.rfcMethod(self.cartCatcher[i])))
+            newCartRow[2].grid(row=self.cartRow, column=6)
 
-        self.cartRow +=1
+            newCartRow.append(object.price)
+            self.cartCatcher.append(newCartRow)
+            self.cartRow +=1
+    def rfcMethod(self, list):
+        for i in range(0, len(list) - 1):
+            list[i].destroy()
+
+        self.cartCatcher.remove(list)
+        self.cartRow -=1
 

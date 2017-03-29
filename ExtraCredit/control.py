@@ -17,6 +17,8 @@ class Controller:
         # Populates self.model.productList with items
         self.model.pamProducts()
         return self.model.productList
+    def calSubTotal(self, list):
+        self.view.subtotalLabel["text"] = self.model.calcSubTotal(list)
 
 if __name__ == "__main__":
     c = Controller()
